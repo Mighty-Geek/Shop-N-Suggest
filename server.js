@@ -1,8 +1,8 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
-const { Server } = require('socket.io');
-const formatMessage = require('./utils/messages');
+const socketio = require('socket.io');
+const { formatMessage } = require('./utils/messages');
 const {
     userJoin,
     getCurrentUser,
@@ -12,17 +12,16 @@ const {
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = socketio(server);
 
 const PORT = 3000 || process.env.PORT;
 
-
 // set static folder
-app.use('/', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const botName = `Shop'N'Suggest Bot`;
 
-//run when a [current] user connects
+//run when a (current) user connects
 io.on('connection', socket => {
     console.log('New websocket connection');
 
@@ -52,7 +51,7 @@ io.on('connection', socket => {
     // listen for chatMessage
     socket.on('chatMessage', (msg) => {
         const user = getCurrentUser(socket.id);
-        io.to(user, room).emit('message', formatMessage(user.username, msg));
+        io.to(user.room).emit('message', formatMessage(user.username, msg));
     });
 
     // when client disconnects
@@ -76,6 +75,6 @@ app.get("/page-2.html", (req, res) => { res.sendFile(path.join(__dirname + "publ
 app.get("/page-3.html", (req, res) => { res.sendFile(path.join(__dirname + "public", "page-3.html")); });
 app.get("/page-3-chat.html", (req, res) => { res.sendFile(path.join(__dirname + "public", "page-3-chat.html")); });
 
-app.listen(PORT, () => console.log(`app is running on port ${PORT}`));
+server.listen(PORT, () => console.log(`app is running on port ${PORT}`));
 
 

@@ -1,7 +1,7 @@
 const chatForm = document.querySelector('#chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.querySelector('#room-name');
-const userList = document.querySelectorAll('#users');
+const userList = document.querySelector('#users');
 
 // Get username and hub from URL
 const { username, room } = Qs.parse(location.search, {
@@ -10,7 +10,7 @@ const { username, room } = Qs.parse(location.search, {
 
 console.log(`${username} is in ${room} room`);
 
-const socket = io();
+var socket = io();
 // join hub
 socket.emit('joinRoom', { username, room });
 
@@ -23,7 +23,7 @@ socket.on('roomUsers', ({ room, users }) => {
 // message from server
 socket.on('message', (message) => {
     console.log(message);
-    ouputMessage(message);
+    outputMessage(message);
 
     // scroll down
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -64,19 +64,18 @@ function outputMessage(msg) {
 function outputRoomName(room) {
     roomName.innerText = room;
 }
-
 // Add users list to DOM
 function outputUsers(users) {
-    userList.innerHTML = `
+    userList.innerHTML = `<ul>
     ${users.map(user => `<li>${user.username}</li>`).join('')}
-    `;
+    </ul>`;
 }
 
 // leave - prompt 
 document.querySelector('.chat-btn').addEventListener('click', () => {
     const leaveRoom = confirm('Are you sure to leave the room?');
     if (leaveRoom) {
-        window.location = `/index.html`;
+        window.location = `/page-2.html`;
     }
     else { }
 });

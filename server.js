@@ -10,11 +10,11 @@ const {
     getRoomUsers
 } = require('./utils/users');
 
-const app = express();
+var app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const PORT = 3000 || process.env.PORT;
+var PORT = process.env.PORT || 3000;
 
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));

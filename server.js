@@ -30,7 +30,7 @@ io.on('connection', socket => {
         const user = userJoin(socket.id, username, room);
         socket.join(user.room);
 
-        socket.emit('message', formatMessage(botName, `Welcome to 'Ask a Friend' functionality`));
+        socket.emit('message', formatMessage(botName, `Welcome to 'Ask a Friend' feature`));
 
         // Broadcast when a user connects
         socket.broadcast
@@ -59,7 +59,7 @@ io.on('connection', socket => {
         const user = userLeave(socket.id);
 
         if (user) {
-            io.to(user.room).emit('message', formatMessage(botName, ` ${user.username} has left the hub`));
+            io.to(user.room).emit('message', formatMessage(botName, ` ${user.username} has left the chat`));
 
             // Send info to room and users
             io.to(user.room).emit('roomUsers', {
